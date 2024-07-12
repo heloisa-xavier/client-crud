@@ -5,10 +5,7 @@ const allClients = new Map(Object.entries(listClientMock));
 
 export const handlers = [
     http.get('/api/clients', () => {
-        return HttpResponse.json({
-            id: 1,
-            name: 'ansons',
-        });
+        return HttpResponse.json(listClientMock);
     }),
 
     http.post('/api/clients', async ({request}) => {
