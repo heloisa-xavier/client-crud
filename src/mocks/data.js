@@ -10,7 +10,7 @@ export const listClientMock = [
         description: "Focus on javascript"
     },
     {
-        id: 2,
+        id: 3,
         name: 'Cooking',
         description: "Learn to cook"
     },

@@ -1,7 +1,7 @@
 import {http, HttpResponse} from 'msw';
 import {listClientMock} from './data';
 
-const allClients = new Map(Object.entries(listClientMock));
+const allClients = new Map(listClientMock.map(client => [client.id, {...client}]));
 
 export const handlers = [
     http.get('/api/clients', () => {
@@ -32,14 +32,16 @@ export const handlers = [
     http.delete('/api/clients/:id', ({params}) => {
         const {id} = params;
 
-        const deletedClient = allClients.get(id.toString());
+        console.log(allClients)
+        console.log(+id)
+        const deletedClient = allClients.get(+id);
 
         if (!deletedClient) {
             return new HttpResponse(null, {status: 404});
         }
 
-        allClients.delete(id.toString());
+        allClients.delete(+id);
 
-        return HttpResponse.json(deletedClient);
+        return HttpResponse.json(Array.from(allClients.values()));
     })
 ];
