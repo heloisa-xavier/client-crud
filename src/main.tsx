@@ -4,7 +4,7 @@ import App from './App.tsx'
 import './index.css'
 
 async function deferRender() {
-    const {worker} = await import('./mocks/browser.js');
+    const {worker} = await import('./mocks/browser.ts');
     return worker.start();
 }
 
