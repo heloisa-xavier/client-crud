@@ -81,18 +81,16 @@ const ListClient = () => {
                 </Table>
             </TableContainer>
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>
-                    Deseja realmente excluir?
-                </DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleDelete}>
-                        Deletar
-                    </Button>
-                    <Button variant="contained" onClick={handleClose} autoFocus>Cancelar</Button>
-                </DialogActions>
-            </Dialog>
-        </>
+            <DeleteClient
+                id={toExclude}
+                open={openDeleteDialg}
+                closeHandler={handleClose}
+            />
+
+            <Button variant="contained" onClick={() => navigate("/criar-cliente")}>
+                Adicionar Cliente
+            </Button>
+        </Stack>
     );
 }
 
