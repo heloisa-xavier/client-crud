@@ -7,50 +7,48 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogTitle,
     IconButton,
+    Button,
+    Stack
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {useNavigate} from "react-router-dom";
 import {Client} from "../../interfaces/clients.tsx";
+import DeleteClient from "../delete-client";
 
 const ListClient = () => {
-    const [rows, setRows] = useState<Client[]>([]);
-    const [open, setOpen] = useState(false);
-    const [toExclude, setToExclude] = useState<number>();
+    const navigate = useNavigate();
+    const [clients, setClients] = useState<Client[]>([]);
+    const [toExclude, setToExclude] = useState<number>(0);
+    const [openDeleteDialg, setOpenDeleteDialog] = useState(false);
 
     useEffect(() => {
-        fetch('/api/clients')
-            .then((res) => res.json())
-            .then((data) => {
-                setRows(data);
-            });
+        const fetchClients = async () => {
+            const response = await fetch('/api/clients');
+            const result = await response.json();
+            setClients(result);
+        };
+
+        fetchClients();
     }, []);
 
     const handleClickOpen = (id: number) => {
         setToExclude(id);
-        setOpen(true);
+        setOpenDeleteDialog(true);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleEdit = (id: number) => {
+        navigate("/criar-cliente", {state: {id}});
     };
 
-    const handleDelete = () => {
-        setOpen(false);
-
-        fetch(`/api/clients/${toExclude}`, {method: "DELETE"})
-            .then((res) => res.json())
-            .then((data) => {
-                setRows(data);
-            });
+    const handleClose = (result?: Client[]) => {
+        result && setClients(result);
+        setOpenDeleteDialog(false);
     };
 
     return (
-        <>
+        <Stack spacing={5}>
             <TableContainer component={Paper}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
@@ -61,19 +59,19 @@ const ListClient = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={row.name}>
+                        {clients.map((client) => (
+                            <TableRow key={client.name}>
                                 <TableCell component="th" scope="row">
-                                    {row.name}
+                                    {client.name}
                                 </TableCell>
-                                <TableCell>{row.description}</TableCell>
+                                <TableCell>{client.description}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton aria-label="delete" onClick={handleClose}>
+                                    <IconButton onClick={() => handleEdit(client.id)}>
                                         <EditIcon/>
                                     </IconButton>
 
-                                    <IconButton aria-label="delete"
-                                                onClick={() => handleClickOpen(row.id)}>
+                                    <IconButton
+                                        onClick={() => handleClickOpen(client.id)}>
                                         <DeleteIcon/>
                                     </IconButton>
                                 </TableCell>
